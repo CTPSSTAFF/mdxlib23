@@ -45,9 +45,7 @@ class TripTableMgr():
     _veh_modes = [ 'sov', 'hov', 'ltrk', 'mtrk', 'htrk' ]
     _per_modes = [ 'auto', 'nonm', 'ta_acc', 'ta_egr', 'tw' ]
     _all_modes = _veh_modes + _per_modes
-    def __init__(self):
-        TripTableMgr.__init__(self, "tdm23")
-    #
+    
     def open_trip_tables(self, scenario_dir):
         """
         Function: open_trip_tables - TDM23 implementation
@@ -592,7 +590,7 @@ class HighwayAssignmentMgr():
         }
         return retval
     #
-# class HighwayAssignmentMgr_TDM23
+# class HighwayAssignmentMgr
 
 ###############################################################################
 #
