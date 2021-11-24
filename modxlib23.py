@@ -46,6 +46,10 @@ class TripTableMgr():
     _per_modes = [ 'auto', 'nonm', 'ta_acc', 'ta_egr', 'tw' ]
     _all_modes = _veh_modes + _per_modes
     
+    def __init__(self):
+        pass
+    #
+    
     def open_trip_tables(self, scenario_dir):
         """
         Function: open_trip_tables - TDM23 implementation
@@ -511,6 +515,11 @@ class HighwayAssignmentMgr():
     """ 
     Class for highway assignment utilities
     """
+    
+    def __init__(self):
+        pass
+    #
+    
     _hwy_asgn_columns = [ 'ID', 'Anode', 'Bnode', 'Length', 
                         'street_name', 'route_number', 'taz_id', 'dir', 'func_class', 
                         'AB_lanes', 'BA_lanes', 
@@ -600,6 +609,11 @@ class SkimsMgr():
     """ 
     Class for "skims" utilities
     """
+    
+    def __init__(self):
+        pass
+    #
+    
     def open_skims(self, scenario_dir):
         # Bike and walk skims are in the _highway directory.
         # There will be one OMX for bike and walk, and 
