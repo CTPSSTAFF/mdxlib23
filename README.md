@@ -1,10 +1,6 @@
 # modxlib23
-Package of utilities for TDM23 MoDX
-
-# modxlib23
 
 __modxlib__ is a package of common functions, data, and classes used in the CTPS Model Data Explorer.  
-
 
 ## Version Identification
 
