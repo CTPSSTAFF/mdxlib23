@@ -607,41 +607,196 @@ class HighwayAssignmentMgr():
 #
 class SkimsMgr():
     """ 
-    Class for "skims" utilities
+    Class for managing "skims" data
     """
+    
+    _skim_periods = [ 'am', 'md' ]
+    _highway_skim_matrices = [ 'da_time', 'da_toll', 'dist', 'sr_time', 'sr_toll' ]
+    _walk_matrices = [ 'dist', 'walk_time' ]
+    _bike_matrices = [ 'dist', 'bike_time' ]
+    _transit_auto_skim_matrices = [ 'Fare', 'auto_cost', 'ddist', 'dtime', 'gen_cost', 
+                                    'ivtt', 'iwait', 'tdist', 'walk' , 'xfer', 'xwait' ]
+    _transit_walk_skim_matrices = [ 'Fare', 'gen_cost', 
+                                'ivtt', 'iwait', 'tdist', 'walk' , 'xfer', 'xwait' ]
     
     def __init__(self):
         pass
     #
+    def load_highway_skims(self, skims_dir, periods=_skim_periods, matrices=_highway_skim_matrices):
+        """"
+            Method: load_highway_skims(self, skims_dir, periods=_skim_periods, matrices=_highway_skim_matrices)
+                    load TDM23 highway skims as numPy arrays into a 2-level dictionary:
+                    the first level of which is time period, the second level of which is matrix name
+                    
+            Args:   skims_dir - root directory where TDM23 skim output can be found
+                    period - list of time periods for which to read skims
+                    matrices - list of skim matrices to read for each time period
+            
+            Returns: a 2-level dict containing the specified skim matrices as numPy arrays
+                     
+            Raises: N/A
+        """
+        retval = {  'am' : {    'da_time' : None,
+                                'da_toll' : None,
+                                'dist'    : None,
+                                'sr_time' : None,
+                                'sr_toll' : None
+                            },
+                    'md' : {    'da_time' : None,
+                                'da_toll' : None,
+                                'dist'    : None,
+                                'sr_time' : None,
+                                'sr_toll' : None
+                            }
+                }
+        for period in periods:
+            omxfn = skims_dir + r'\highway_skim_' + period + '.omx'
+            skim_omx = omx.open_file(omxfn,'r')
+            for matrix in matrices:
+                retval[period][matrix] = skim_omx[matrix]
+            # end inner for
+        # end outer for
+        return retval
+    # end_def load_highway_skims
     
-    def open_skims(self, scenario_dir):
-        # Bike and walk skims are in the _highway directory.
-        # There will be one OMX for bike and walk, and 
-        # four time-period-specific OMXs for all else.
-        highway_skim_dir = scenario_dir + '/_highway/'
-        transit_skim_dir = scenario_dir + '/_transit/'
-        
-        # Return value: data structure in which we will store the opened skim OMXs
-        skim_omxs = { 'am' : {}, 'md' : {}, 'pm' : {}, 'nt' : {}, 'daily' : {} }
-        #
-        for tp in self._all_time_periods:
-            fn = highway_skim_dir + tp + '_highway_skim.omx'
-            skim_omxs[tp]['highway'] = omx.open_file(fn, 'r')
-            fn = transit_skim_dir + '_transit_walk_skim.omx'
-            skim_omxs[tp]['transit_walk'] = omx.open_file(fn, 'r')
-            fn = transit_skim_dir + '_transit_auto_skim.omx'
-            skim_omxs[tp]['transit_auto'] = omx.open_file(fn, 'r')
-        #
-        fn = highway_skim_dir + 'bike_skim.omx'
-        skim_omxs['daily']['bike'] = omx.open_file(fn, 'r')
-        fn = highway_skim_dir + 'walk_skim.omx'
-        skim_omxs['daily']['walk'] = omx.open_file(fn, 'r')
-    # 
-    def load_skims(self, skim_omxs):
-        # stub for now
-        pass
-    #
-# class SkimsMgr
+    def load_walk_skims(self, skims_dir, matrices=_walk_matrices):
+        """"
+            Method: load_walk_skims(self, skims_dir, matrices=_walk_skim_matrices)
+                    load TDM23 transit-auto skims as numPy arrays into a dictionary
+                    indexed by matrix name
+            
+            Args:   skims_dir - root directory where TDM23 skim output can be found
+                    matrices - list of skim matrices to read
+            
+            Returns: a dict containing the specified skim matrices as numPy arrays
+            
+            Raises: N/A
+        """
+        retval = {  'dist'      : None,
+                    'walk_time' : None
+                }
+        omxfn = skims_dir + r'\walk_skim_.omx'
+        skim_omx = omx.open_file(omxfn,'r')
+        for matrix in matrices:
+            retval[matrix] = skim_omx[matrix]
+        # end_for
+        return retval
+    # end_def
+    
+    def load_bike_skims(self, skims_dir, matrices=_bike_matrices):
+        """"
+            Method: load_bike_skims(self, skims_dir, matrices=_walk_skim_matrices)
+                    load TDM23 transit-auto skims as numPy arrays into a dictionary
+                    indexed by matrix name
+            
+            Args:   skims_dir - root directory where TDM23 skim output can be found
+                    matrices - list of skim matrices to read
+            
+            Returns: a dict containing the specified skim matrices as numPy arrays
+            
+            Raises: N/A
+        """
+        retval = {  'dist'      : None,
+                    'bike_time' : None
+                }
+        omxfn = skims_dir + r'\bike_skim_.omx'
+        skim_omx = omx.open_file(omxfn,'r')
+        for matrix in matrices:
+            retval[matrix] = skim_omx[matrix]
+        # end_for
+        return retval
+    # end_def
+   
+    def load_transit_auto_skims(self, skims_dir, periods=_skim_periods, matrices=_transit_auto_skim_matrices):
+        """"
+            Method: load_transit_auto_skims(self, skims_dir, periods=_skim_periods, matrices=_transit_auto_skim_matrices)
+                    load TDM23 transit-auto skims as numPy arrays into a 2-level dictionary:
+                    the first level of which is time period, the second level of which is matrix name
+            
+            Args:   skims_dir - root directory where TDM23 skim output can be found
+                    period - list of time periods for which to read skims
+                    matrices - list of skim matrices to read for each time period
+            
+            Returns: a 2-level dict containing the specified skim matrices as numPy arrays
+            
+            Raises: N/A
+        """
+        retval = {  'am' : {    'Fare'      : None,
+                                'auto_cost' : None,
+                                'ddist_dist': None,
+                                'dtime'     : None,
+                                'gen_cost'  : None,
+                                'ivtt'      : None,
+                                'iwait'     : None,
+                                'tdist'     : None,
+                                'walk'      : None,
+                                'xfer'      : None,
+                                'xwait'     : None
+                            },
+                    'md' : {    'Fare'      : None,
+                                'auto_cost' : None,
+                                'ddist_dist': None,
+                                'dtime'     : None,
+                                'gen_cost'  : None,
+                                'ivtt'      : None,
+                                'iwait'     : None,
+                                'tdist'     : None,
+                                'walk'      : None,
+                                'xfer'      : None,
+                                'xwait'     : None
+                            }
+                }
+        for period in periods:
+            omxfn = skims_dir + r'\transit_skim_auto_' + period + '.omx'
+            skim_omx = omx.open_file(omxfn,'r')
+            for matrix in matrices:
+                retval[period][matrix] = skim_omx[matrix]
+            # end inner for
+        # end outer for
+        return retval
+    # end_def
+    
+    def load_transit_walk_skims(self, skims_dir, periods=_skim_periods, matrices=_transit_walk_skim_matrices):
+        """"
+            Method: load_transit_walk_skims(self, skims_dir, periods=_skim_periods, matrices=_transit_walk_skim_matrices)
+                    load TDM23 transit-auto skims as numPy arrays into a 2-level dictionary:
+                    the first level of which is time period, the second level of which is matrix name
+            
+            Args:   skims_dir - root directory where TDM23 skim output can be found
+                    period - list of time periods for which to read skims
+                    matrices - list of skim matrices to read for each time period
+            
+            Returns: a 2-level dict containing the specified skim matrices as numPy arrays
+            
+            Raises: N/A
+        """
+        retval = {  'am' : {    'Fare'      : None,
+                                'gen_cost'  : None,
+                                'ivtt'      : None,
+                                'iwait'     : None,
+                                'walk'      : None,
+                                'xfer'      : None,
+                                'xwait'     : None
+                            },
+                    'md' : {    'Fare'      : None,
+                                'gen_cost'  : None,
+                                'ivtt'      : None,
+                                'iwait'     : None,
+                                'walk'      : None,
+                                'xfer'      : None,
+                                'xwait'     : None
+                            }
+                }
+        for period in periods:
+            omxfn = skims_dir + r'\transit_skim_walk_' + period + '.omx'
+            skim_omx = omx.open_file(omxfn,'r')
+            for matrix in matrices:
+                retval[period][matrix] = skim_omx[matrix]
+            # end inner for
+        # end outer for
+        return retval
+    # end_def
+# end_class SkimsMgr
 
 ###############################################################################
 #
