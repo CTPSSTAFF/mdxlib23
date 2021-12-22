@@ -8,7 +8,12 @@ __Function__: __get_version()__ - Returns version ID string of library.
 
 ## Trip Table Management
 
-__TBD__
+__Summary__: TripTableMgr manages access to the trip tables for a given scenario
+
+__Methods__:
+1. open_trip_tables(scenario_dir) - opens the trip table OMXs for a given scenario; returns a dict containig the open OMXs
+2. load_trip_tables(tt_omxs, veh_modes=None, per_modes=None) - open the trip table OMXs for the inidcated modes;
+returns a two-level dictionary (i.e., first level = time period, second level = mode) containing the trip tables read into numPy arrays
 
 ## TAZ "shapefile" Management
 
@@ -63,13 +68,27 @@ on the list of TAZ records.
 
 ## Utilities for the Transit Mode
 
+__TBD__
 
 ## Utilities for the Highway Mode
 
-
-## Utilities for Working with "Skims"
-
 __TBD__
+
+## "Skims" Management
+
+__Summary__: Skims manages access to the "skims" for a given scenario
+
+__Methods__:
+1. load_highway_skims(self, skims_dir, periods=_skim_periods, matrices=_highway_skim_matrices) - loads the highway skims for a given scenario into
+a two-level dict containing a numPy array for each skim matrix read
+2. load_walk_skims(skims_dir, matrices=_walk_matrices) - loads the walk skims for a given scenario into 
+a one-level dict containing a numPy array for each skim matrix read
+3. load_bike_skims(skims_dir, matrices=_bike_matrices) - loads the bike skims for a given scenario into 
+a one-level dict containing a numPy array for each skim matrix read
+4. load_transit_auto_skims(skims_dir, periods=_skim_periods, matrices=_transit_auto_skim_matrices) - loads the transit-auto skims for a given scenario into
+a two-level dict containing a numPy array for each skim matrix read
+5. load_transit_walk_skims(skims_dir, periods=_skim_periods, matrices=_transit_walk_skim_matrices) - loads the transit-walk skims for a given scenario into
+a two-level dict containing a numPy array for each skim matrix read
 
 ## Dataframe and Geo-dataframe Utilities
 
