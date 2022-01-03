@@ -28,7 +28,7 @@ import pydash
 #
 # Section 0: Version identification
 #
-_version = "0.2.0"
+_version = "0.2.1"
 def get_version():
     return _version
 # end_def
